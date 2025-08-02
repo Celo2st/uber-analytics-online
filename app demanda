@@ -1,11 +1,5 @@
-""" 
-Código: streamlit_app.py
 
-Este aplicativo Streamlit permite a um usuário não programador carregar os dados e visualizar a análise de demanda com alguns cliques.
-"""
-
-try:
-    import streamlit as st
+  import streamlit as st
 except ModuleNotFoundError:
     st.error("O módulo 'streamlit' não está instalado. Por favor, execute 'pip install streamlit' antes.")
     st.stop()
