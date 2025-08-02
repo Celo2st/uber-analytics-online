@@ -1,1 +1,8 @@
-teste
+cd caminho/para/analise_demanda_project
+git init
+git add .
+git commit -m "App de análise de demanda"
+git branch -M main
+git remote add origin https://github.com/<SEU_USUARIO>/analise-demanda-app.git
+git push -u origin main
+
