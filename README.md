@@ -1,0 +1,86 @@
+""" 
+Código: streamlit_app.py
+
+Este aplicativo Streamlit permite a um usuário não programador carregar os dados e visualizar a análise de demanda com alguns cliques.
+"""
+
+try:
+    import streamlit as st
+except ModuleNotFoundError:
+    st.error("O módulo 'streamlit' não está instalado. Por favor, execute 'pip install streamlit' antes.")
+    st.stop()
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+def load_data(uploaded_file):
+    """Lê CSV ou Excel e retorna um DataFrame."""
+    try:
+        if uploaded_file.name.endswith('.csv'):
+            return pd.read_csv(uploaded_file)
+        else:
+            return pd.read_excel(uploaded_file)
+    except Exception as e:
+        st.error(f"Erro ao carregar dados: {e}")
+        return pd.DataFrame()
+
+def analyze_demand(df):
+    """Retorna métricas básicas de demanda."""
+    metrics = {
+        'Total de Registros': len(df),
+        'Período Inicial': df['timestamp'].min(),
+        'Período Final': df['timestamp'].max(),
+        'Média de Corridas por Dia': df.groupby(df['timestamp'].dt.date).size().mean()
+    }
+    return metrics
+
+@st.cache_data
+def plot_demand(df):
+    """Gera gráfico de corridas por hora do dia."""
+    df['hour'] = df['timestamp'].dt.hour
+    demand_by_hour = df.groupby('hour').size()
+    fig, ax = plt.subplots()
+    ax.plot(demand_by_hour.index, demand_by_hour.values)
+    ax.set_xlabel('Hora do Dia')
+    ax.set_ylabel('Número de Corridas')
+    ax.set_title('Demanda por Hora')
+    return fig
+
+st.set_page_config(page_title="Análise de Demanda", layout="wide")
+st.title('Aplicativo de Análise de Demanda')
+
+uploaded_file = st.file_uploader("Selecione o arquivo de dados (CSV ou XLSX)", type=['csv', 'xlsx'])
+if uploaded_file:
+    df = load_data(uploaded_file)
+    if not df.empty:
+        if 'timestamp' in df.columns:
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+        else:
+            st.error('Coluna "timestamp" não encontrada.')
+            st.stop()
+
+        st.subheader('Visualização dos Dados')
+        st.dataframe(df.head())
+
+        st.subheader('Métricas de Demanda')
+        metrics = analyze_demand(df)
+        st.write(metrics)
+
+        st.subheader('Gráfico de Demanda')
+        fig = plot_demand(df)
+        st.pyplot(fig)
+else:
+    st.info('Faça o upload de um arquivo para iniciar a análise.')
+# Use imagem oficial Python
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY streamlit_app.py ./
+EXPOSE 8501
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
+streamlit
+pandas
+matplotlib
+openpyxl
