@@ -1,8 +1,54 @@
-cd caminho/para/analise_demanda_project
-git init
-git add .
-git commit -m "App de análise de demanda"
-git branch -M main
-git remote add origin https://github.com/<SEU_USUARIO>/analise-demanda-app.git
-git push -u origin main
+'''
+Código: streamlit_app.py
 
+Resumo da Revisão de Código Original:
+- Organização: Separe lógica de carga, tratamento e visualização em funções distintas.
+- Legibilidade: Adicione docstrings e comentários claros em cada função.
+- Tratamento de erros: Verifique a validade dos dados carregados e use try/except.
+- Desempenho: Utilize cache do Streamlit para evitar recomputação desnecessária.
+- Padronização: Use nomes de variáveis descritivos e consistentes.
+
+Este aplicativo Streamlit permite a um usuário não programador carregar os dados e visualizar a análise de demanda com alguns cliques.
+
+=== GitHub: Estrutura do Repositório ===
+No GitHub, você deve colocar estes arquivos na raiz do repositório:
+
+- **streamlit_app.py**: Código principal do app (abaixo).
+- **requirements.txt**: Lista de dependências para instalação automática.
+- **Dockerfile**: Instruções para criar container Docker.
+- **.gitignore** (opcional): Para ignorar pastas como `__pycache__/`, arquivos temporários, etc. Exemplo mínimo:
+  ```gitignore
+  __pycache__/
+  *.pyc
+  .DS_Store
+  ```
+
+=== Empacotamento e Implantação ===
+Fornecemos duas opções para distribuir e executar o aplicativo:
+
+1. **Execução local**
+   - Instale as dependências abaixo:
+     ```bash
+     pip install -r requirements.txt
+     ```
+   - Execute:
+     ```bash
+     streamlit run streamlit_app.py
+     ```
+
+2. **Container Docker**
+   - Gere a imagem Docker:
+     ```bash
+     docker build -t analise-demanda:latest .
+     ```
+   - Execute o container:
+     ```bash
+     docker run -p 8501:8501 analise-demanda:latest
+     ```
+
+---
+
+# Arquivos do Projeto
+
+**streamlit_app.py**
+''' (continua abaixo)
